@@ -37,14 +37,9 @@ namespace MiniERP.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.Customer)
-                .WithMany(c => c.Invoices)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.SalesOrder)
-                .WithOne(s => s.Invoice)
-                .OnDelete(DeleteBehavior.Restrict);
+     .HasOne(i => i.Customer)
+     .WithMany(c => c.Invoices)
+     .HasForeignKey(i => i.CustomerId);
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
