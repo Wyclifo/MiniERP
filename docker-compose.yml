@@ -1,0 +1,46 @@
+services:
+
+  minierp-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: minierp-api
+
+    ports:
+      - "8090:8080"
+      - "8091:8081"
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=minierp-sqlserver,1433;Database=MiniErpDb;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=True;
+
+    depends_on:
+      - minierp-sqlserver
+
+    networks:
+      - minierp-network
+
+  minierp-sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+    container_name: minierp-sqlserver
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrongPassword123!"
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - minierp-sql-data:/var/opt/mssql
+
+    networks:
+      - minierp-network
+
+networks:
+  minierp-network:
+
+volumes:
+  minierp-sql-data:

@@ -9,6 +9,10 @@ namespace MiniERP.Data
             DbContextOptions<AppDbContext> options)
             : base(options)
         {
+            // Create the database if it does not exist.
+            // Use EnsureCreated() for simple initialization without migrations.
+            // If you use migrations, replace with Database.Migrate().
+            Database.EnsureCreated();
         }
 
         public DbSet<Customer> Customers => Set<Customer>();
