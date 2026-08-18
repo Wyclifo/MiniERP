@@ -24,37 +24,23 @@ namespace MiniERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            try
-            {
+          
                 return await _context.Customers
                     .AsNoTracking()
                     .OrderBy(x => x.Name)
                     .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                 _logger?.LogError(ex, "Error retrieving customers.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving customers.");
-            }
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            try
-            {
+           
                 var customer = await _context.Customers
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == id);
                 if (customer == null)
                     return NotFound();
                 return customer;
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"Error retrieving customer with ID {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the customer.");
-            }
            
         }
 
@@ -62,9 +48,7 @@ namespace MiniERP.Controllers
         public async Task<ActionResult<Customer>> CreateCustomer(
             CreateCustomerDto dto)
         {
-            try
-            {
-                var customer = new Customer
+            var customer = new Customer
                 {
                     CustomerCode = await GenerateCustomerCode(),
                     Name = dto.Name,
@@ -81,10 +65,7 @@ namespace MiniERP.Controllers
                     nameof(GetCustomer),
                     new { id = customer.Id },
                     customer);
-            } catch (Exception ex) {
-                _logger?.LogError(ex, "Error creating customer.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the customer.");
-            }
+
         }
 
         [HttpPut("{id:int}")]
@@ -92,8 +73,6 @@ namespace MiniERP.Controllers
             int id,
             UpdateCustomerDto dto)
         {
-            try
-            {
                 var customer = await _context.Customers.FindAsync(id);
 
                 if (customer == null)
@@ -110,19 +89,12 @@ namespace MiniERP.Controllers
 
                 return NoContent();
 
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"Error updating customer with ID {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the customer.");
-            }
+         
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            try
-            {
                 var customer = await _context.Customers.FindAsync(id);
 
                 if (customer == null)
@@ -133,26 +105,15 @@ namespace MiniERP.Controllers
                 await _context.SaveChangesAsync();
 
                 return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"Error deleting customer with ID {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while deleting the customer.");
-            }
+          
         }
 
         private async Task<string> GenerateCustomerCode()
         {
-
-            try
-            {
                 var count = await _context.Customers.CountAsync();
 
                 return $"CUS-{count + 1:000}";
-            } catch (Exception ex) {
-                _logger?.LogError(ex, "Error generating customer code.");
-                throw;
-            }
+           
         }
     }
 }

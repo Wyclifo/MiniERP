@@ -2,6 +2,7 @@
 {
     public class Supplier
     {
+
         public int Id { get; set; }
 
         public string SupplierCode { get; set; } = string.Empty;

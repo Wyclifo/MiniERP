@@ -43,7 +43,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("CustomerCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -61,9 +61,6 @@ namespace MiniERP.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerCode")
-                        .IsUnique();
 
                     b.ToTable("Customers");
                 });
@@ -95,7 +92,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SalesOrderId")
                         .HasColumnType("int");
@@ -107,9 +104,6 @@ namespace MiniERP.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("InvoiceNumber")
-                        .IsUnique();
 
                     b.HasIndex("SalesOrderId")
                         .IsUnique();
@@ -184,7 +178,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("PaymentNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reference")
                         .IsRequired()
@@ -195,9 +189,6 @@ namespace MiniERP.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("PaymentNumber")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -234,7 +225,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("ProductCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("int");
@@ -243,9 +234,6 @@ namespace MiniERP.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductCode")
-                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -263,7 +251,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -277,9 +265,6 @@ namespace MiniERP.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderNumber")
-                        .IsUnique();
 
                     b.HasIndex("SupplierId");
 
@@ -332,7 +317,7 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -345,9 +330,6 @@ namespace MiniERP.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("OrderNumber")
-                        .IsUnique();
 
                     b.ToTable("SalesOrders");
                 });
@@ -414,12 +396,9 @@ namespace MiniERP.Migrations
 
                     b.Property<string>("SupplierCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SupplierCode")
-                        .IsUnique();
 
                     b.ToTable("Suppliers");
                 });
@@ -448,13 +427,13 @@ namespace MiniERP.Migrations
                     b.HasOne("MiniERP.Models.Customer", "Customer")
                         .WithMany("Payments")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MiniERP.Models.Invoice", "Invoice")
                         .WithMany("Payments")
                         .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -467,7 +446,7 @@ namespace MiniERP.Migrations
                     b.HasOne("MiniERP.Models.Supplier", "Supplier")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Supplier");
@@ -478,7 +457,7 @@ namespace MiniERP.Migrations
                     b.HasOne("MiniERP.Models.Product", "Product")
                         .WithMany("PurchaseOrderItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MiniERP.Models.PurchaseOrder", "PurchaseOrder")
@@ -497,7 +476,7 @@ namespace MiniERP.Migrations
                     b.HasOne("MiniERP.Models.Customer", "Customer")
                         .WithMany("SalesOrders")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -508,7 +487,7 @@ namespace MiniERP.Migrations
                     b.HasOne("MiniERP.Models.Product", "Product")
                         .WithMany("SalesOrderItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MiniERP.Models.SalesOrder", "SalesOrder")

@@ -16,7 +16,6 @@
 
         public decimal UnitPrice { get; set; }
 
-        public decimal Total =>
-            Quantity * UnitPrice;
+        public decimal Total => Quantity * UnitPrice;
     }
 }

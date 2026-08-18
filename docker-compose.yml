@@ -1,4 +1,4 @@
-services:
+﻿services:
 
   minierp-api:
     build:
@@ -12,14 +12,16 @@ services:
       - "8091:8081"
 
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=minierp-sqlserver,1433;Database=MiniErpDb;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=True;
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=minierp-sqlserver,1433;Database=minierp;User Id=sa;Password=${MYSECRET_PASSWORD};TrustServerCertificate=True;"
 
     depends_on:
-      - minierp-sqlserver
+      minierp-sqlserver:
+        condition: service_healthy
 
     networks:
       - minierp-network
+
 
   minierp-sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -28,7 +30,7 @@ services:
 
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "YourStrongPassword123!"
+      MSSQL_SA_PASSWORD: "${MYSECRET_PASSWORD}"
 
     ports:
       - "1433:1433"
@@ -36,8 +38,21 @@ services:
     volumes:
       - minierp-sql-data:/var/opt/mssql
 
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -C -Q \"SELECT 1\" || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
     networks:
       - minierp-network
+    restart: on-failure
+
 
 networks:
   minierp-network:

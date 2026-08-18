@@ -24,8 +24,7 @@
 
         public string Status { get; set; } = "Unpaid";
 
-        public decimal Balance =>
-            Amount - AmountPaid;
+        public decimal Balance => Amount - AmountPaid;
 
         public ICollection<Payment> Payments { get; set; }
             = new List<Payment>();
